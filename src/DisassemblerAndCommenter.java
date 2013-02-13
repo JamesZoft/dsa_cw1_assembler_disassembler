@@ -4,80 +4,81 @@ public class DisassemblerAndCommenter {
 	{
 		String[] nums = new String[64];
 		nums = new String[]{
-				"04000000",
-				"05012000",
-				"03000001",
-				"0500F000",
-				"03000006",
-				"02000023",
-				"0400FF80",
-				"05012020",
-				"03000007",
-				"05012000",
-				"03000009",
-				"0500F070",
+				"02000036",
+				"08000000",
+				"08000000",
+				"08000000",
+				"08000000",
+				"08000000",
+				"08000000",
+				"08000000",
+				"0A000000",
+				"04000008",
+				"06000033",
+				"0500F040",
 				"0300000E",
-				"02000028",
+				"02000022",
+				"0400FF80",
+				"06000031",
+				"0500F0D0",
+				"03000013",
+				"02000024",
 				"0400FF40",
-				"05012020",
-				"0300000F",
-				"05012000",
-				"03000011",
-				"0500F000",
-				"03000016",
-				"0200002D",
+				"06000031",
+				"0500F050",
+				"03000018",
+				"02000026",
 				"0400FF20",
-				"05012020",
-				"03000017",
-				"05012000",
-				"03000019",
-				"0500F020",
-				"0300001E",
-				"02000032",
+				"06000031",
+				"0500F0A0",
+				"0300001D",
+				"02000028",
 				"0400FF10",
 				"05012020",
-				"0300001F",
+				"0300001E",
 				"0400FF01",
-				"02000036",
+				"0200002C",
 				"0400FF80",
-				"05012020",
-				"03000024",
-				"05012000",
-				"03000026",
+				"06000031",
 				"0400FF40",
+				"06000031",
+				"0400FF20",
+				"06000031",
+				"0400FF10",
 				"05012020",
 				"03000029",
-				"05012000",
-				"0300002B",
-				"0400FF20",
-				"05012020",
-				"0300002E",
-				"05012000",
-				"03000030",
-				"0400FF10",
-				"05012020",
-				"03000033",
 				"0400FF02",
 				"05014000",
-				"03000036",
+				"0300002C",
 				"05014040",
-				"03000038",
-				"02000000",
+				"0300002E",
+				"02000008",
+				"05012020",
+				"03000031",
+				"05012000",
+				"03000033",
+				"07000000",
+				"0400FF0C",
+				"08000000",
+				"00000000",
+				"00000000",
+				"00000000",
 				"00000000",
 				"00000000",
 				"00000000",
 				"00000000",
 				"00000000"};
-		for(String s : nums)
+		for(int i = 8; i < nums.length; i++)
 		{
+			String s = nums[i];
 			String out = "";
 			if(s.charAt(1) == '0')
 			{
-				out += "IUC";
+				out += "IUC || Increment unconditionally";
 			}
 			else if(s.charAt(1) == '1')
 			{
-				out += "HUC";
+				out += "HUC || Hold unconditionally";
 			}
 			else if(s.charAt(1) == '2')
 			{
@@ -94,6 +95,26 @@ public class DisassemblerAndCommenter {
 			else if(s.charAt(1) == '5')
 			{
 				out += "TSTI" + "|port:" + s.charAt(2) + s.charAt(3) + "|anded with:" + s.charAt(4) + s.charAt(5) + "|or'd with:" + s.charAt(6) + s.charAt(7) + "	||Test input port " + s.charAt(2) + s.charAt(3) + ", AND with " + s.charAt(4) + s.charAt(5) + ", OR with " + s.charAt(6) + s.charAt(7);
+			}
+			else if(s.charAt(1) == '6')
+			{
+				out += "BSR|" + s.charAt(2) + s.charAt(3) + s.charAt(4) + s.charAt(5) + s.charAt(6) + s.charAt(7) + "	||Branch to subroutine at address " + s.charAt(2) + s.charAt(3) + s.charAt(4) + s.charAt(5) + s.charAt(6) + s.charAt(7);
+			}
+			else if(s.charAt(1) == '7')
+			{
+				out += "RSR || Return from subroutine";
+			}
+			else if(s.charAt(1) == '8')
+			{
+				out += "RIR || Return from interrupt";
+			}
+			else if(s.charAt(1) == '9')
+			{
+				out += "CLI || Clear interrupt enable flag";
+			}
+			else if(s.charAt(1) == 'A')
+			{
+				out += "SEI || Set interrupt enable flag";
 			}
 			System.out.println(out);
 		}

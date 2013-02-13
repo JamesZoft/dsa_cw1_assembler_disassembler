@@ -13,70 +13,63 @@ import java.util.Scanner;
 public class Assembler {
 
 	String[] assembly = new String[]{
-			"SETO 00 00 00",
-			"TSTI 01 20 00",
-			"BIC 000001",
-			"TSTI 00 F0 00",
-			"BIC 000006",
-			"BUC 000023",
-			"SETO 00 FF 80",
-			"TSTI 01 20 20",
-			"BIC 000007",
-			"TSTI 01 20 00",
-			"BIC 000009",
-			"TSTI 00 F0 70",
+			"SEI",
+			"SETO 00 00 08",
+			"BSR 000033",
+			"TSTI 00 F0 40",
 			"BIC 00000E",
-			"BUC 000028",
+			"BUC 000022",
+			"SETO 00 FF 80",
+			"BSR 000031",
+			"TSTI 00 F0 D0",
+			"BIC 000013",
+			"BUC 000024",
 			"SETO 00 FF 40",
-			"TSTI 01 20 20",
-			"BIC 00000F",
-			"TSTI 01 20 00",
-			"BIC 000011",
-			"TSTI 00 F0 00",
-			"BIC 000016",
-			"BUC 00002D",
+			"BSR 000031",
+			"TSTI 00 F0 50",
+			"BIC 000018",
+			"BUC 000026",
 			"SETO 00 FF 20",
-			"TSTI 01 20 20",
-			"BIC 000017",
-			"TSTI 01 20 00",
-			"BIC 000019",
-			"TSTI 00 F0 20",
-			"BIC 00001E",
-			"BUC 000032",
+			"BSR 000031",
+			"TSTI 00 F0 A0",
+			"BIC 00001D",
+			"BUC 000028",
 			"SETO 00 FF 10",
 			"TSTI 01 20 20",
-			"BIC 00001F",
+			"BIC 00001E",
 			"SETO 00 FF 01",
-			"BUC 000036",
+			"BUC 00002C",
 			"SETO 00 FF 80",
-			"TSTI 01 20 20",
-			"BIC 000024",
-			"TSTI 01 20 00",
-			"BIC 000026",
+			"BSR 000031",
 			"SETO 00 FF 40",
+			"BSR 000031",
+			"SETO 00 FF 20",
+			"BSR 000031",
+			"SETO 00 FF 10",
 			"TSTI 01 20 20",
 			"BIC 000029",
-			"TSTI 01 20 00",
-			"BIC 00002B",
-			"SETO 00 FF 20",
-			"TSTI 01 20 20",
-			"BIC 00002E",
-			"TSTI 01 20 00",
-			"BIC 000030",
-			"SETO 00 FF 10",
-			"TSTI 01 20 20",
-			"BIC 000033",
 			"SETO 00 FF 02",
 			"TSTI 01 40 00",
-			"BIC 000036",
+			"BIC 00002C",
 			"TSTI 01 40 40",
-			"BIC 000038",
-			"BUC 000000",
+			"BIC 00002E",
+			"BUC 000008",
+			"TSTI 01 20 20",
+			"BIC 000031",
+			"TSTI 01 20 00",
+			"BIC 000033",
+			"RSR",
+			"SETO 00 FF 0C",
+			"RIR",
 			"IUC",
 			"IUC",
 			"IUC",
 			"IUC",
-	"IUC" };
+			"IUC",
+			"IUC",
+			"IUC",
+			"IUC"
+ };
 
 	private HashMap<String, AndXorMask> SETOValues;
 
@@ -110,6 +103,7 @@ public class Assembler {
 		}
 		String andMask = new String(binaryAndMask);
 		String xorMask = new String(binaryXorMask);
+		System.out.println("AndMask: " + andMask);
 		String hexAnd = Integer.toHexString(Integer.parseInt(andMask, 2));
 		if(hexAnd.length() == 1)
 			hexAnd = "0" + hexAnd;
@@ -148,6 +142,7 @@ public class Assembler {
 		{
 			String next = s.nextLine();
 			lineNumber++;
+			
 			InvalidInputException iie = new InvalidInputException("Invalid assembly on line " + lineNumber);
 			String[] instruction = next.split(" ");
 			if(instruction[0].contains("//") || instruction[0].contains("#")) //If line is a comment
@@ -185,20 +180,64 @@ public class Assembler {
 				}
 
 				else if(instruction[0].equals("SETO")) {
-					if(!instruction[1].equalsIgnoreCase("port") || !instruction[3].matches("[01x]{8}") || !(instruction[2].equals("00") || instruction[2].equals("01")))
-						throw iie;
-					else
+					//System.out.println("asdasasdas");
+					//if(instruction[1].equalsIgnoreCase("port") || instruction[3].matches("[01x]{8}") || (instruction[1].equals("00") == true || instruction[1].equals("01") == true) )
+					//	System.out.println("AAA");
+
+					if(instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}") && (instruction[1].equals("00") == true || instruction[1].equals("01") == true) )
 						System.out.println("04" + instruction[2] + convertInstruction(instruction[3]));
+					else if( (instruction[1].equals("00") == true || instruction[1].equals("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
+						System.out.println("04" + instruction[1] + instruction[2] + instruction[3]);
+					else
+						throw iie;
 				}
 
 				else if(instruction[0].equals("TSTI")) {
 					if(instruction[2].equals("00") && instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}"))
 						System.out.println("05" + instruction[2] + convertInstruction(instruction[3]));
+					else if( (instruction[1].equals("00") == true || instruction[1].equals("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
+						System.out.println("05" + instruction[1] + instruction[2] + instruction[3]);
 					else if(instruction[1].equals("01"))
 						System.out.println("05" + instruction[1] + instruction[2] + instruction[3]);
 					else
 						throw iie;
 				}
+				
+				else if(instruction[0].equals("BSR"))
+				{
+					if(instruction[1].length() != programCounterLength)
+						throw iie;
+					else
+						System.out.println("06" + instruction[1]);
+				}
+				
+				else if(instruction[0].equals("RSR")) {
+					if(instruction.length != 1)
+						throw iie;
+					else
+						System.out.println("07000000");
+				}
+				
+				else if(instruction[0].equals("RIR")) {
+					if(instruction.length != 1)
+						throw iie;
+					else
+						System.out.println("08000000");
+				}
+				else if(instruction[0].equals("SEI")) {
+					if(instruction.length != 1)
+						throw iie;
+					else
+						System.out.println("09000000");
+				}
+				else if(instruction[0].equals("CLI")) {
+					if(instruction.length != 1)
+						throw iie;
+					else
+						System.out.println("0A000000");
+				}
+				
+				
 			}
 			catch (InvalidInputException e) {
 				e.printStackTrace();
