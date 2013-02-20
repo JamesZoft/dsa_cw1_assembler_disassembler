@@ -1,6 +1,10 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class DisassemblerAndCommenter {
 		
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException
 	{
 		String[] nums = new String[64];
 		nums = new String[]{
@@ -68,9 +72,12 @@ public class DisassemblerAndCommenter {
 				"00000000",
 				"00000000",
 				"00000000"};
-		for(int i = 8; i < nums.length; i++)
+		File hexFile = new File("hex.txt");
+		Scanner scan = new Scanner(hexFile);
+		
+		while(scan.hasNext())
 		{
-			String s = nums[i];
+			String s = scan.nextLine();
 			String out = "";
 			if(s.charAt(1) == '0')
 			{
