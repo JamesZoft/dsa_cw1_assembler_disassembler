@@ -1,12 +1,7 @@
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Scanner;
 
 
@@ -71,7 +66,6 @@ public class Assembler {
 			"IUC"
  };
 
-	private HashMap<String, AndXorMask> SETOValues;
 
 	private static int programCounterLength = 6;
 	
@@ -119,8 +113,8 @@ public class Assembler {
 		Scanner s = new Scanner(f);
 
 		int lineNumber = 0;
-		
-		/*//first pass for labels
+		/*
+		//first pass for labels
 		labels = new HashMap<String, Integer>();
 		while(s.hasNext())
 		{
@@ -135,8 +129,8 @@ public class Assembler {
 				System.out.println("label: " + label + " | linenumber: " + lineNumber);
 			}
 		}
-		s = new Scanner(f);
 		//second pass
+		s = new Scanner(f);
 		lineNumber = 0;*/
 		while(s.hasNext())
 		{
@@ -150,21 +144,21 @@ public class Assembler {
 				continue;
 			}
 			try{
-				if(instruction[0].equals("IUC")) {
+				if(instruction[0].equalsIgnoreCase("IUC")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
 						System.out.println("00000000");
 				}
 
-				else if(instruction[0].equals("HUC")) {
+				else if(instruction[0].equalsIgnoreCase("HUC")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
 						System.out.println("01000000");
 				}
 
-				else if(instruction[0].equals("BUC")) {
+				else if(instruction[0].equalsIgnoreCase("BUC") || instruction[0].equalsIgnoreCase("JMP")) {
 					if(instruction[1].length() != programCounterLength)
 						throw iie;
 					else
@@ -172,38 +166,38 @@ public class Assembler {
 
 				}
 
-				else if(instruction[0].equals("BIC")) {
+				else if(instruction[0].equalsIgnoreCase("BIC")) {
 					if(instruction[1].length() != programCounterLength)
 						throw iie;
 					else
 						System.out.println("03" + instruction[1]);
 				}
 
-				else if(instruction[0].equals("SETO")) {
+				else if(instruction[0].equalsIgnoreCase("SETO")) {
 					//System.out.println("asdasasdas");
 					//if(instruction[1].equalsIgnoreCase("port") || instruction[3].matches("[01x]{8}") || (instruction[1].equals("00") == true || instruction[1].equals("01") == true) )
 					//	System.out.println("AAA");
 
-					if(instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}") && (instruction[1].equals("00") == true || instruction[1].equals("01") == true) )
+					if(instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}") && (instruction[1].equalsIgnoreCase("00") == true || instruction[1].equalsIgnoreCase("01") == true) )
 						System.out.println("04" + instruction[2] + convertInstruction(instruction[3]));
-					else if( (instruction[1].equals("00") == true || instruction[1].equals("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
+					else if( (instruction[1].equalsIgnoreCase("00") == true || instruction[1].equalsIgnoreCase("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
 						System.out.println("04" + instruction[1] + instruction[2] + instruction[3]);
 					else
 						throw iie;
 				}
 
-				else if(instruction[0].equals("TSTI")) {
-					if(instruction[2].equals("00") && instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}"))
+				else if(instruction[0].equalsIgnoreCase("TSTI")) {
+					if(instruction[2].equalsIgnoreCase("00") && instruction[1].equalsIgnoreCase("port") && instruction[3].matches("[01x]{8}"))
 						System.out.println("05" + instruction[2] + convertInstruction(instruction[3]));
-					else if( (instruction[1].equals("00") == true || instruction[1].equals("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
+					else if( (instruction[1].equalsIgnoreCase("00") == true || instruction[1].equalsIgnoreCase("01") == true) && instruction[2].length() == 2 && instruction[3].length() == 2)
 						System.out.println("05" + instruction[1] + instruction[2] + instruction[3]);
-					else if(instruction[1].equals("01"))
+					else if(instruction[1].equalsIgnoreCase("01"))
 						System.out.println("05" + instruction[1] + instruction[2] + instruction[3]);
 					else
 						throw iie;
 				}
 				
-				else if(instruction[0].equals("BSR"))
+				else if(instruction[0].equalsIgnoreCase("BSR"))
 				{
 					if(instruction[1].length() != programCounterLength)
 						throw iie;
@@ -211,26 +205,26 @@ public class Assembler {
 						System.out.println("06" + instruction[1]);
 				}
 				
-				else if(instruction[0].equals("RSR")) {
+				else if(instruction[0].equalsIgnoreCase("RSR")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
 						System.out.println("07000000");
 				}
 				
-				else if(instruction[0].equals("RIR")) {
+				else if(instruction[0].equalsIgnoreCase("RIR")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
 						System.out.println("08000000");
 				}
-				else if(instruction[0].equals("SEI")) {
+				else if(instruction[0].equalsIgnoreCase("SEI")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
 						System.out.println("09000000");
 				}
-				else if(instruction[0].equals("CLI")) {
+				else if(instruction[0].equalsIgnoreCase("CLI")) {
 					if(instruction.length != 1)
 						throw iie;
 					else
@@ -251,7 +245,6 @@ public class Assembler {
 		try {
 			a.assemble(new File("assembly.txt"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
